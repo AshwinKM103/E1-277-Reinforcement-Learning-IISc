@@ -1,0 +1,14 @@
+2026-02-01 16:16:42,362 - INFO - Created output directories at outputs/20260201_161642
+2026-02-01 16:16:42,362 - INFO - Logging to file: outputs/20260201_161642/logs/experiment.log
+2026-02-01 16:16:42,362 - INFO - Starting Experiment: Beta=0.0, Runs=200, Steps=2000
+2026-02-01 16:16:48,234 - INFO - Saved results to outputs/20260201_161642/results/results_beta_0.0.json
+2026-02-01 16:16:48,234 - INFO - Starting Experiment: Beta=0.3, Runs=200, Steps=2000
+2026-02-01 16:17:02,047 - INFO - Saved results to outputs/20260201_161642/results/results_beta_0.3.json
+2026-02-01 16:17:02,047 - INFO - Starting Experiment: Beta=0.6, Runs=200, Steps=2000
+2026-02-01 16:17:15,878 - INFO - Saved results to outputs/20260201_161642/results/results_beta_0.6.json
+2026-02-01 16:17:15,878 - INFO - Generating plots...
+2026-02-01 16:17:18,009 - INFO - Saved plot: rewards.png
+2026-02-01 16:17:18,118 - INFO - Saved plot: optimal_actions.png
+2026-02-01 16:17:18,246 - INFO - Saved plot: baselines.png
+2026-02-01 16:17:18,371 - INFO - Saved plot: regrets.png
+2026-02-01 16:17:18,371 - INFO - Experiment sequence completed successfully.
