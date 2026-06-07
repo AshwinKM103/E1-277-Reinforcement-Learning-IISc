@@ -1,112 +1,153 @@
-# Non-Stationary Gradient Bandit Analysis
+# E1-277 Reinforcement Learning — IISc
 
 ![Python](https://img.shields.io/badge/python-3.11-blue)
+![RL](https://img.shields.io/badge/topic-Reinforcement%20Learning-orange)
+![Status](https://img.shields.io/badge/status-active-brightgreen)
 
-> **An advanced Reinforcement Learning implementation demonstrating how adaptive baselines improve gradient bandit performance in non-stationary environments.**
+> **Two comprehensive Reinforcement Learning assignments focusing on Adaptive Gradient Bandits for non-stationary environments and Q-Learning on tabular GridWorlds.**
+
+A collection of high-quality implementations for foundational RL algorithms designed for the E1-277 course at the Indian Institute of Science (IISc).
+
+---
 
 ## Table of Contents
-- [Problem Statement](#problem-statement)
-- [Solution Overview](#solution-overview)
-- [Key Features](#key-features)
-- [Installation](#installation)
+
 - [Quick Start](#quick-start)
-- [Results](#results)
-- [Technical Architecture](#technical-architecture)
+- [Problem Statement & Solutions](#problem-statement--solutions)
+- [Technical Architecture & Environment](#technical-architecture--environment)
+- [Performance & Visualizations](#performance--visualizations)
+- [Installation & Setup](#installation--setup)
+- [Repository Structure](#repository-structure)
 
-## Problem Statement
-
-In standard Multi-Armed Bandit problems, the reward distribution for each arm is constant. However, in **non-stationary environments**, these distributions drift over time (e.g., via a Random Walk). Standard Gradient Bandit algorithms that use a simple average baseline fail to adapt quickly to these changes, leading to suboptimal long-term performance and high regret.
-
-This project implements and analyzes an **Adaptive Gradient Bandit** that uses a variance-based window mechanism to track changing means more effectively than static baselines.
-
-## Solution Overview
-
-The core of this solution is the `AdaptiveGradientBandit` agent, which introduces a dynamic baseline calculation:
-
-1.  **Variance-Based Weighting**: Instead of a simple moving average, the baseline computation weights recent rewards based on their variance.
-2.  **Adaptive Baseline ($\beta$)**: A parameter $\beta$ controls the mix between the global average and the recent variance-adjusted mean.
-    *   $\beta = 0$: Standard Gradient Bandit (Global Average).
-    *   $\beta > 0$: Adaptive Gradient Bandit (Responsive to drift).
-3.  **Softmax Exploration**: Action probabilities are updated using gradient ascent on the preference function $H_t(a)$.
-
-## Key Features
-
-*   **Non-Stationary Environment**: Simulates random walk drift for 10 arms.
-*   **Adaptive Algorithms**: Configurable $\beta$ parameter to test sensitivity.
-*   **Comprehensive Metrics**: Tracks Regret, Average Reward, % Optimal Action, and Baseline values.
-*   **Automated Visualization**: Generates comparative plots using Plotly.
-
-## Installation
-
-### Prerequisites
-*   Python 3.11
-
-### Setup
-
-**Option 1: Using Conda (Recommended)**
-```bash
-conda create -n gradient_bandit python=3.11
-conda activate gradient_bandit
-pip install -r requirements.txt
-```
-
-**Option 2: Using Standard Pip**
-```bash
-# Optional: Create a virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-pip install -r requirements.txt
-```
+---
 
 ## Quick Start
 
-Run the main experiment script to execute the simulation across different $\beta$ values (0.0, 0.3, 0.6):
+The fastest way to see the reinforcement learning agents in action:
 
 ```bash
-python assignment1.py
+# Clone the repository
+git clone <repo-url>
+cd E1-277-Reinforcement-Learning-IISc
+
+# Create and activate the conda environment
+conda create -n RL python=3.11 -y
+conda activate RL
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run Assignment 1 (Adaptive Gradient Bandit)
+python src/assignment1.py
+
+# Run Assignment 2 (Q-Learning on GridWorld)
+python src/assignment2.py
 ```
 
-This will:
-1.  Run 200 independent simulations for each configuration.
-2.  Log progress to `outputs/<timestamp>/logs/experiment.log`.
-3.  Save result plots to `outputs/<timestamp>/results/`.
+Outputs, including plots and logs, will be automatically generated in timestamped directories within the `outputs/` folder.
 
-## Results
+---
 
-The following plots demonstrate the superior performance of the adaptive baseline ($\beta > 0$) compared to the standard approach.
+## Problem Statement & Solutions
 
-### Average Reward vs Time
-The adaptive agent (Red/Green) recovers faster from distribution drifts than the standard agent (Blue).
+### Assignment 1 — Adaptive Gradient Bandit
+In standard Multi-Armed Bandit problems, reward distributions are stationary. However, in **non-stationary environments**, distributions drift over time. Standard Gradient Bandit algorithms fail to adapt quickly. 
 
-![Average Reward](assets/rewards.png)
+**Solution**: The `AdaptiveGradientBandit` introduces:
+- **Variance-Based Weighting**: Weights recent rewards inversely proportional to their variance.
+- **Adaptive Baseline (β)**: Dynamically balances between a global average and a variance-adjusted recent mean.
 
-### % Optimal Action
-The adaptive agent maintains a higher probability of selecting the optimal arm as the environment changes.
+### Assignment 2 — Q-Learning on GridWorld
+An implementation of **Q-Learning** (off-policy temporal-difference control) on a 5×5 tabular GridWorld. The agent learns to navigate from a start cell to a goal cell, avoiding obstacles and pits, entirely through trial-and-error experience.
 
-![Optimal Action](assets/optimal_actions.png)
+**Solution**:
+- Implements an $\epsilon$-greedy exploration strategy with exponential decay.
+- Uses Off-Policy Temporal Difference learning to approximate the optimal action-value function $Q^*(s, a)$.
 
-### Cumulative Regret
-Lower regret indicates better long-term performance in tracking the optimal arm.
+---
 
-![Cumulative Regret](assets/regrets.png)
+## Technical Architecture & Environment
 
-## Technical Architecture
-
-The interaction between the Agent and the Non-Stationary Environment is modeled as follows:
+### GridWorld Layout (Assignment 2)
+A 5×5 deterministic GridWorld environment:
 
 ```text
-        +-----------------------------------+
-        |            Environment            |
-        |   (Non-Stationary, Random Walk)   |
-        +----------------+------------------+
-                         |
-           ^             | Reward R
-  Action A |             |
-           |             v
-        +----------------+------------------+
-        |              Agent                |
-        |    (Adaptive Gradient Bandit)     |
-        |   Updates Preferences H(a)        |
-        +-----------------------------------+
+ S  .  .  W  .
+ .  W  .  W  .
+ .  W  .  .  .
+ .  .  P  W  .
+ .  .  .  .  G
+```
+
+| Symbol | Description | Reward | Terminal |
+|--------|-------------|--------|----------|
+| `S`    | Start       | -0.1   | No       |
+| `.`    | Empty       | -0.1   | No       |
+| `G`    | Goal        | +10.0  | Yes      |
+| `P`    | Pit         | -5.0   | Yes      |
+| `W`    | Wall        | N/A    | No       |
+
+### Q-Learning Update Rule
+```math
+Q(s, a) \leftarrow Q(s, a) + \alpha \left[ r + \gamma \max_{a'} Q(s', a') - Q(s, a) \right]
+```
+
+---
+
+## Performance & Visualizations
+
+### Assignment 1: Adaptive vs Standard Baseline
+The adaptive baseline allows the agent to recover significantly faster from reward distribution drifts, leading to higher optimal action selection and lower regret.
+
+| Metric | Visualization |
+|--------|---------------|
+| **Rewards** | ![Rewards](assets/rewards.png) |
+| **Optimal Actions** | ![Optimal Action](assets/optimal_actions.png) |
+| **Regret** | ![Regret](assets/regrets.png) |
+
+### Assignment 2: Q-Learning Navigation
+The agent effectively converges to the optimal path, avoiding the pit and minimizing steps.
+
+| Metric | Visualization |
+|--------|---------------|
+| **Learning Curve** | ![Learning Curve](assets/assignment2/learning_curve.png) |
+| **Greedy Policy** | ![Policy](assets/assignment2/policy.png) |
+| **Value Function** | ![Value Function](assets/assignment2/value_function.png) |
+
+---
+
+## Installation & Setup
+
+### Prerequisites
+- Python 3.11
+- Conda (highly recommended for environment management)
+
+### Environment Setup
+```bash
+conda activate RL
+pip install -r requirements.txt
+```
+
+### Dependencies
+- `numpy>=1.20.0`
+- `plotly>=5.0.0`
+- `kaleido==0.2.1`
+- `scipy>=1.7.0`
+
+---
+
+## Repository Structure
+
+```text
+E1-277-Reinforcement-Learning-IISc/
+├── src/
+│   ├── assignment1.py          # Adaptive Gradient Bandit implementation
+│   └── assignment2.py          # Q-Learning on GridWorld implementation
+├── assignments/
+│   ├── RL-Assignment-1.pdf     # Assignment 1 instructions
+│   └── RL_Assignment_2.pdf     # Assignment 2 instructions
+├── outputs/                    # Timestamped execution outputs
+├── assets/                     # README visualization images
+├── requirements.txt            # Python dependencies
+└── README.md                   # Project documentation
 ```

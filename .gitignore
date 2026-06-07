@@ -1,0 +1,5 @@
+reports/*
+!reports/*.pdf
+__World-Class README Best Practices Guide__.md
+ml_refactoring_best_practices.md
+src/__pycache__/
