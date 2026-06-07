@@ -1,3 +1,22 @@
+"""
+assignment1.py
+
+Implements non-stationary bandit experiments using an Adaptive Gradient Bandit algorithm.
+
+The implementation supports:
+    - Running multiple independent bandit simulations.
+    - Adaptive baselines based on recent variance-adjusted means.
+    - Random walk drifts in true reward means to simulate non-stationarity.
+
+Key classes / functions:
+    - ExperimentConfig: Configuration for Bandit Experiments.
+    - AdaptiveGradientBandit: Gradient Bandit Agent with Adaptive Baseline.
+    - NonStationaryBandit: Non-stationary 10-armed bandit environment with random walk drift.
+
+Version:
+    - 07-Jun-2026 (Version 1.0): Initial implementation and documentation.
+"""
+
 import numpy as np
 import logging
 import json
